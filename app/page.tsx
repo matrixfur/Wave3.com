@@ -656,7 +656,7 @@ function EnhancedMobileNav() {
             exit={{ opacity: 0, height: 0 }}
             className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50 rounded-b-2xl shadow-lg"
           >
-            <nav className="flex flex-col p-6 space-y-4">
+            <nav className="flex flex-col p-6 space-y-4 items-center text-center">
               {menuItems.map((item, index) => (
                 <motion.a
                   key={item}
@@ -675,9 +675,9 @@ function EnhancedMobileNav() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: menuItems.length * 0.1 }}
-                className="pt-4 border-t border-gray-100"
+                className="pt-4 border-t border-gray-100 w-full flex justify-center"
               >
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white">
+                <Button className="w-full max-w-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white">
                   Get Started
                 </Button>
               </motion.div>
@@ -961,54 +961,58 @@ export default function Wave3Landing() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="fixed top-4 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 w-[95%] sm:w-[90%] max-w-4xl"
+            className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 mx-auto max-w-4xl"
           >
             <motion.div
-              className="bg-white/80 backdrop-blur-xl rounded-full border border-gray-100 shadow-lg shadow-blue-50/50"
+              className="bg-white/80 backdrop-blur-xl rounded-full border border-gray-100 shadow-lg shadow-blue-50/50 px-4 sm:px-6 py-3 flex items-center justify-between"
               whileHover={{ scale: 1.01, shadow: "0 20px 25px -5px rgba(59, 130, 246, 0.1)" }}
             >
-              <div className="px-4 sm:px-6 py-3 flex items-center justify-between">
-                <motion.div className="flex items-center" whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-                  <Image src="/wave3-logo.png" alt="Wave3" width={80} height={32} className="h-5 sm:h-6 w-auto" />
-                </motion.div>
+              <motion.div className="flex items-center" whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
+                <Image
+                  src="/wave3-logo.png"
+                  alt="Wave3"
+                  width={200} // Increased from 140 to 200
+                  height={72} // Increased from 48 to 72
+                  className="h-16 sm:h-20 w-auto" // Increased height classes for even bigger logo
+                />
+              </motion.div>
 
-                <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
-                  {["About", "Services", "Work", "Contact"].map((item, index) => (
-                    <motion.a
-                      key={item}
-                      href={`#${item.toLowerCase()}`}
-                      className="text-gray-600 hover:text-blue-600 transition-colors text-sm font-medium relative"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 + 0.2 }}
-                      whileHover={{ y: -2 }}
-                    >
-                      {item}
-                      <motion.div
-                        className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-600"
-                        whileHover={{ width: "100%" }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    </motion.a>
-                  ))}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+              <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+                {["About", "Services", "Work", "Contact"].map((item, index) => (
+                  <motion.a
+                    key={item}
+                    href={`#${item.toLowerCase()}`}
+                    className="text-gray-600 hover:text-blue-600 transition-colors text-sm font-medium relative"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.2 }}
+                    whileHover={{ y: -2 }}
                   >
-                    <Button
-                      size="sm"
-                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg text-xs sm:text-sm px-3 sm:px-4"
-                    >
-                      Get Started
-                    </Button>
-                  </motion.div>
-                </div>
-
-                <EnhancedMobileNav />
+                    {item}
+                    <motion.div
+                      className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-600"
+                      whileHover={{ width: "100%" }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.a>
+                ))}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg text-xs sm:text-sm px-3 sm:px-4"
+                  >
+                    Get Started
+                  </Button>
+                </motion.div>
               </div>
+
+              <EnhancedMobileNav />
             </motion.div>
           </motion.nav>
 
