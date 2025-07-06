@@ -2,6 +2,7 @@ lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
+<<<<<<< HEAD
   excludeLinksFromLockfile: false
 
 importers:
@@ -8889,3 +8890,6 @@ snapshots:
       '@types/react': 19.0.0
       react: 19.0.0
       use-sync-external-store: 1.5.0(react@19.0.0)
+=======
+  excludeLinksFromLockfile: false
+>>>>>>> 9c33c70 (dark mode changes)
