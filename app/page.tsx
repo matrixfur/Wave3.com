@@ -6,9 +6,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useRef, useState, useEffect, Suspense } from "react"
+import Spline from "@splinetool/react-spline";
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion"
-import { Canvas } from "@react-three/fiber"
-import { Sphere, Float, Environment, Preload, Points } from "@react-three/drei"
 import { Progress } from "@/components/ui/progress"
 import { ToastAction } from "@/components/ui/toast"
 import {
@@ -35,10 +34,18 @@ import {
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Image from "next/image"
-import * as THREE from "three"
-import { useFrame } from "@react-three/fiber"
+// import { useFrame } from "@react-three/fiber"
 import { useInView } from "framer-motion"
 import { useToast } from "@/components/ui/use-toast"
+
+function Enhanced3DScene() {
+  return (
+    <div className="w-full h-full">
+      {/* Use the Spline React component instead of */}
+      <Spline scene="https://prod.spline.design/JoDD0AQyTJJY4kJ5kgRUF6fA/scene.splinecode" />
+    </div>
+  );
+}
 
 // Custom hook to detect mobile devices
 const useMobile = () => {
@@ -168,119 +175,6 @@ function EnhancedBackground() {
   )
 }
 
-// Enhanced Particles with subtle colors
-function EnhancedParticles() {
-  const pointsRef = useRef<THREE.Points>(null!)
-  const isMobile = useMobile()
-  const particleCount = isMobile ? 150 : 300
-
-  const positions = new Float32Array(particleCount * 3)
-  const colors = new Float32Array(particleCount * 3)
-  const sizes = new Float32Array(particleCount)
-
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 25
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 25
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 25
-
-    // Subtle blue tones
-    const colorVariant = Math.random()
-    if (colorVariant < 0.7) {
-      colors[i * 3] = 0.2 + Math.random() * 0.2 // R
-      colors[i * 3 + 1] = 0.4 + Math.random() * 0.3 // G
-      colors[i * 3 + 2] = 0.8 + Math.random() * 0.2 // B
-    } else {
-      colors[i * 3] = 0.1 // R
-      colors[i * 3 + 1] = 0.1 // G
-      colors[i * 3 + 2] = 0.1 // B (some gray particles)
-    }
-
-    sizes[i] = Math.random() * 0.03 + 0.01
-  }
-
-  useFrame((state) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y = state.clock.elapsedTime * 0.015
-
-      const positionAttribute = pointsRef.current.geometry.attributes.position
-      const sizeAttribute = pointsRef.current.geometry.attributes.size
-
-      if (positionAttribute && sizeAttribute && positionAttribute.array && sizeAttribute.array) {
-        const positions = positionAttribute.array as Float32Array
-        const sizes = sizeAttribute.array as Float32Array
-
-        for (let i = 0; i < particleCount; i++) {
-          const i3 = i * 3
-          const x = positions[i3]
-          const y = positions[i3 + 1]
-          const z = positions[i3 + 2]
-
-          const dist = Math.sqrt(x * x + y * y + z * z)
-          const wave = Math.sin(dist * 0.4 - state.clock.elapsedTime * 0.3) * 0.3 + 0.7
-          sizes[i] = (Math.random() * 0.03 + 0.01) * wave
-
-          // Gentle drift
-          positions[i3] += Math.sin(state.clock.elapsedTime * 0.1 + i) * 0.002
-          positions[i * 3 + 1] += Math.cos(state.clock.elapsedTime * 0.1 + i) * 0.002
-        }
-
-        positionAttribute.needsUpdate = true
-        sizeAttribute.needsUpdate = true
-      }
-    }
-  })
-
-  return (
-    <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
-      <bufferAttribute attach="geometry-color" array={colors} count={particleCount} itemSize={3} />
-      <bufferAttribute attach="geometry-size" array={sizes} count={particleCount} itemSize={1} />
-      <pointsMaterial
-        size={0.03}
-        sizeAttenuation={true}
-        depthWrite={false}
-        vertexColors={true}
-        transparent
-        opacity={0.6}
-      />
-    </Points>
-  )
-}
-
-// Enhanced 3D Scene with subtle colors
-function Enhanced3DScene() {
-  const isMobile = useMobile()
-
-  return (
-    <Canvas camera={{ position: [0, 0, isMobile ? 10 : 8], fov: isMobile ? 50 : 45 }}>
-      <ambientLight intensity={0.6} />
-      <pointLight position={[10, 10, 10]} intensity={0.4} />
-      <pointLight position={[-10, -10, -10]} intensity={0.2} color="#3b82f6" />
-
-      <EnhancedParticles />
-
-      <Float speed={0.8} rotationIntensity={0.2} floatIntensity={0.5}>
-        <Sphere args={[isMobile ? 0.8 : 1.2, 32, 32]} position={[0, 0, 0]}>
-          <meshStandardMaterial color="#f8fafc" roughness={0.1} metalness={0.1} />
-        </Sphere>
-      </Float>
-
-      <Float speed={0.5} rotationIntensity={0.1} floatIntensity={0.3}>
-        <Sphere args={[isMobile ? 0.3 : 0.4, 16, 16]} position={[isMobile ? 1.5 : 2.5, 1, -1]}>
-          <meshStandardMaterial color="#dbeafe" roughness={0.2} metalness={0.05} />
-        </Sphere>
-      </Float>
-
-      <Float speed={0.6} rotationIntensity={0.15} floatIntensity={0.4}>
-        <Sphere args={[isMobile ? 0.2 : 0.25, 16, 16]} position={[isMobile ? -1.2 : -2, -1, 0.5]}>
-          <meshStandardMaterial color="#e0e7ff" roughness={0.3} metalness={0.1} />
-        </Sphere>
-      </Float>
-
-      <Environment preset="studio" />
-      <Preload all />
-    </Canvas>
-  )
-}
 
 // Enhanced Scroll Progress with color
 function EnhancedScrollProgress() {
@@ -1914,7 +1808,7 @@ export default function Wave3Landing() {
               <motion.div className="flex items-center" whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
                 <Image src="/wave3-logo.png" alt="Wave3" width={200} height={72} className="h-16 sm:h-20 w-auto" />
               </motion.div>
-
+               
               <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
                 <ThemeToggle />
                 {["About", "Services", "Work"].map((item, index) => (
@@ -1935,6 +1829,7 @@ export default function Wave3Landing() {
                     />
                   </motion.a>
                 ))}
+                
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -2075,7 +1970,14 @@ export default function Wave3Landing() {
                       </div>
                     }
                   >
-                    <Enhanced3DScene />
+                    <iframe
+                      src="https://my.spline.design/tubes-JoDD0AQyTJJY4kJ5kgRUF6fA/"
+                      frameBorder="0"
+                      width="100%"
+                      height="100%"
+                      style={{ background: "transparent" }}
+                      allowTransparency={true}
+                    />
                   </Suspense>
                 </motion.div>
               </div>
@@ -2287,11 +2189,11 @@ export default function Wave3Landing() {
                     company: "Local Bistro",
                     text: "The mobile app transformed our business completely. Simple to use for both customers and staff. Highly recommended for any business.",
                   },
-                  {
-                    name: "Lakshan G",
-                    company: "Creative Studio",
-                    text: "Professional team with great attention to detail. They understood our vision perfectly and executed it with modern flair.",
-                  },
+                  // {
+                  //   name: "Lakshan G",
+                  //   company: "Creative Studio",
+                  //   text: "Professional team with great attention to detail. They understood our vision perfectly and executed it with modern flair.",
+                  // },
                 ].map((testimonial, index) => (
                   <EnhancedTestimonialCard
                     key={index}
