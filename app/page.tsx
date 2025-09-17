@@ -5,11 +5,11 @@ import type React from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useRef, useState, useEffect, Suspense } from "react"
-import Spline from "@splinetool/react-spline";
+import { useRef, useState, useEffect } from "react"
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion"
 import { Progress } from "@/components/ui/progress"
 import { ToastAction } from "@/components/ui/toast"
+import SplineScreen from "@/components/ui/SplineScreen"
 import {
   ArrowRight,
   Menu,
@@ -38,14 +38,8 @@ import Image from "next/image"
 import { useInView } from "framer-motion"
 import { useToast } from "@/components/ui/use-toast"
 
-function Enhanced3DScene() {
-  return (
-    <div className="w-full h-full">
-      {/* Use the Spline React component instead of */}
-      <Spline scene="https://prod.spline.design/JoDD0AQyTJJY4kJ5kgRUF6fA/scene.splinecode" />
-    </div>
-  );
-}
+
+ 
 
 // Custom hook to detect mobile devices
 const useMobile = () => {
@@ -100,7 +94,9 @@ function EnhancedPreloader({ onComplete }: { onComplete: () => void }) {
         transition={{ delay: 0.1 }}
         className="mb-8"
       >
-        <Image src="/wave3-logo.png" alt="Wave3 Logo" width={120} height={48} className="h-12 w-auto" />
+        <div className="h-12 w-12 rounded-full overflow-hidden relative">
+          <Image src="C:\Users\Admin\wave 3 portfolio\wave3-landing-page\public\wave3-logo.png" alt="Wave3 Logo" fill className="object-cover" />
+        </div>
       </motion.div>
 
       <div className="w-48 mb-4">
@@ -126,7 +122,9 @@ function EnhancedPreloader({ onComplete }: { onComplete: () => void }) {
 // Enhanced Background with subtle colors and dark mode support
 function EnhancedBackground() {
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden">
+    <>
+      {/*<SplineScreen />*/}
+      <div className="fixed inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-gray-950 dark:via-blue-950/30 dark:to-indigo-950/20"></div>
 
       {/* Subtle grid */}
@@ -172,6 +170,7 @@ function EnhancedBackground() {
         }}
       />
     </div>
+    </>
   )
 }
 
@@ -1162,17 +1161,19 @@ function VisualDesignPosterCreation() {
                     />
 
                     {/* Success impact badge */}
-                    <motion.div
-                      className="absolute top-4 right-4 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-bold"
-                      animate={
-                        hoveredPoster === poster.id
-                          ? { scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }
-                          : { scale: 1, rotate: 0 }
-                      }
-                      transition={{ duration: 0.5 }}
-                    >
-                      {poster.impact}
-                    </motion.div>
+                    {(poster as any).impact && (
+                      <motion.div
+                        className="absolute top-4 right-4 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-bold"
+                        animate={
+                          hoveredPoster === poster.id
+                            ? { scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }
+                            : { scale: 1, rotate: 0 }
+                        }
+                        transition={{ duration: 0.5 }}
+                      >
+                        {(poster as any).impact as string}
+                      </motion.div>
+                    )}
 
                     {/* Poster mockup content */}
                     <div className="absolute inset-0 p-6 flex flex-col justify-between text-white">
@@ -1806,7 +1807,9 @@ export default function Wave3Landing() {
               whileHover={{ scale: 1.01 }}
             >
               <motion.div className="flex items-center" whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-                <Image src="/wave3-logo.png" alt="Wave3" width={200} height={72} className="h-16 sm:h-20 w-auto" />
+                <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden relative">
+                  <Image src="/wave3-logo.png" alt="Wave3" fill className="object-cover" />
+                </div>
               </motion.div>
                
               <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
@@ -1938,7 +1941,7 @@ export default function Wave3Landing() {
                     {[
                       { number: 150, suffix: "+", label: "Projects", color: "text-blue-600 dark:text-blue-400" },
                       { number: 98, suffix: "%", label: "Satisfaction", color: "text-indigo-600 dark:text-indigo-400" },
-                      { number: 5, suffix: "+", label: "Years", color: "text-purple-600 dark:text-purple-400" },
+                      { number: 3, suffix: "+", label: "Years", color: "text-purple-600 dark:text-purple-400" },
                     ].map((stat, index) => (
                       <motion.div
                         key={index}
@@ -1955,31 +1958,7 @@ export default function Wave3Landing() {
                   </motion.div>
                 </motion.div>
 
-                {/* Right Content - Enhanced 3D Scene */}
-                <motion.div
-                  className="h-[300px] sm:h-[400px] lg:h-[500px] order-first lg:order-last"
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <Suspense
-                    fallback={
-                      <div className="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl animate-pulse flex items-center justify-center border border-blue-100">
-                        <div className="text-blue-400 text-sm">Loading 3D Scene...</div>
-                      </div>
-                    }
-                  >
-                    <iframe
-                      src="https://my.spline.design/tubes-JoDD0AQyTJJY4kJ5kgRUF6fA/"
-                      frameBorder="0"
-                      width="100%"
-                      height="100%"
-                      style={{ background: "transparent" }}
-                      allowTransparency={true}
-                    />
-                  </Suspense>
-                </motion.div>
+                
               </div>
             </div>
           </motion.section>
@@ -2073,6 +2052,12 @@ export default function Wave3Landing() {
                     description:
                       "Creative visual designs, posters, and branding materials that captivate audiences and communicate your message effectively.",
                     features: ["Poster Design", "Brand Identity", "Digital Art", "Print Materials"],
+                  },
+                  {
+                    title: "Video Editing",
+                    description:
+                      "Professional video editing for promos, reels, and brand content with smooth pacing and on-brand visuals.",
+                    features: ["Cutting & Sequencing", "Color Grading", "Motion Graphics", "Sound Design"],
                   },
                 ].map((service, index) => (
                   <EnhancedServiceCard
@@ -2177,31 +2162,27 @@ export default function Wave3Landing() {
           </motion.p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {[
-                  {
-                    name: "Pareekshith P",
-                    company: "TechStart Inc",
-                    text: "Wave3 delivered exactly what we needed. Clean, fast, and effective. Our conversion rate increased by 40% within the first month.",
-                  },
-                  {
-                    name: "Ansar Hussain A",
-                    company: "Local Bistro",
-                    text: "The mobile app transformed our business completely. Simple to use for both customers and staff. Highly recommended for any business.",
-                  },
-                  // {
-                  //   name: "Lakshan G",
-                  //   company: "Creative Studio",
-                  //   text: "Professional team with great attention to detail. They understood our vision perfectly and executed it with modern flair.",
-                  // },
-                ].map((testimonial, index) => (
-                  <EnhancedTestimonialCard
+                  { name: "Ansar Hussain A", role: "founder · Frontend Developer", image: "/team image/Ansar.png" },
+                  { name: "Pareekshith P", role: "Co-founder · Full‑Stack Developer", image: "/team image/Pareekshith.png" },
+
+                  // { name: "Lakshan G", role: "Frontend Engineer", image: "/team/lakshan.jpg" },
+                ].map((member, index) => (
+                  <motion.div
                     key={index}
-                    name={testimonial.name}
-                    company={testimonial.company}
-                    text={testimonial.text}
-                    index={index}
-                  />
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="border border-gray-100 dark:border-gray-800 rounded-2xl p-6 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm shadow-lg dark:shadow-gray-900/30 text-center"
+                    whileHover={{ scale: 1.03, y: -4 }}
+                  >
+                    <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
+                      <Image src={member.image} alt={member.name} width={96} height={96} className="w-full h-full object-cover" />
+                    </div>
+                    <h3 className="text-black dark:text-white font-medium">{member.name}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{member.role}</p>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -2290,7 +2271,9 @@ export default function Wave3Landing() {
             <div className="container mx-auto">
               <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
                 <motion.div className="flex items-center space-x-4" whileHover={{ scale: 1.02 }}>
-                  <Image src="/wave3-logo.png" alt="Wave3" width={60} height={24} className="h-4 w-auto" />
+                  <div className="h-6 w-6 rounded-full overflow-hidden relative">
+                    <Image src="/wave3-logo.png" alt="Wave3" fill className="object-cover" />
+                  </div>
                   <span className="text-gray-500 dark:text-gray-400 text-sm">© 2024 Wave3. All rights reserved.</span>
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
